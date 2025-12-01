@@ -3,12 +3,7 @@ pipeline {
 
     stages {
 
-        stage('Checkout code') {
-            steps {
-                // 🟢 ADAPTER la branche si ce n'est pas main (par ex: master)
-                git branch: 'main', url: 'git@github.com:Nour-Ghribi/projet_devops.git'
-            }
-        }
+        
 
         stage('Build & Unit Tests (JUnit)') {
             steps {
