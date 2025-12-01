@@ -1,8 +1,7 @@
-FROM openjdk:17
+FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
-# Le JAR généré par "mvn clean package"
 COPY target/eventsProject-1.0.0.jar app.jar
 
 EXPOSE 8089
