@@ -1,26 +1,28 @@
 global:
-  scrape_interval: 5s
-  evaluation_interval: 5s
+  scrape_interval: 5s          # fréquence de scrap des métriques
+  evaluation_interval: 5s      # fréquence d'évaluation des règles
 
 scrape_configs:
 
-  # Scrape Spring Boot app (actuator prometheus)
-  - job_name: 'spring-app'
-    metrics_path: '/actuator/prometheus'
+  # 🌱 Spring Boot app (EventsProject)
+  - job_name: 'events_app'
+    metrics_path: '/events/actuator/prometheus'
     static_configs:
       - targets: ['app:8089']
+        labels:
+          application: 'events-project'
 
-  # Scrape cAdvisor (métriques des containers)
+  # 📦 cAdvisor : métriques des conteneurs Docker
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
 
-  # Scrape node-exporter (métriques de la VM / host)
+  # 🖥️ Node-exporter : métriques de la VM / host
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['node-exporter:9100']
 
-  # Scrape Prometheus lui-même
+  # 🧠 Prometheus lui-même
   - job_name: 'prometheus'
     static_configs:
       - targets: ['prometheus:9090']
