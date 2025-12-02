@@ -7,11 +7,17 @@ services:
       MYSQL_DATABASE: eventsProject
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   eventsapp:
     image: nourxgh/eventsproject:1.0.0
     container_name: events_project
     depends_on:
-      - mysql_events
+      mysql_events:
+        condition: service_healthy
     ports:
       - "8089:8089"
