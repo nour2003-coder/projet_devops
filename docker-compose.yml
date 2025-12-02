@@ -1,23 +1,46 @@
+version: '3.8'
+
 services:
-  mysql_events:
+  mysql:
     image: mysql:8.0
-    container_name: mysql_events
+    container_name: eventsproject-mysql
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: eventsProject
     ports:
       - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - eventsproject-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
+      start_period: 30s
 
-  eventsapp:
+  app:
     image: nourxgh/eventsproject:1.0.0
-    container_name: events_project
-    depends_on:
-      mysql_events:
-        condition: service_healthy
+    container_name: eventsproject-app
+    restart: unless-stopped
     ports:
       - "8089:8089"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/eventsProject?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8089
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - eventsproject-network
+
+networks:
+  eventsproject-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
