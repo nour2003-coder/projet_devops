@@ -22,7 +22,7 @@ services:
       - eventsproject-network
 
   app:
-    image: nourxgh/eventsproject:1.0.0
+    image: nourardh/eventsproject:1.0.0
     container_name: events_app
     restart: unless-stopped
     ports:
